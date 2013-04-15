@@ -16,6 +16,8 @@ typedef void *(*smokers_t)(void *);
 void* smoker_0(void* arg)
 {
 	printf("Smoker zero waiting to smoke (has paper)\n");
+
+	return NULL;
 }
 
 /**
@@ -25,6 +27,7 @@ void* smoker_1(void* arg)
 {
 	printf("Smoker one waiting to smoke (has matches)\n");
 
+	return NULL;
 }
 
 /**
@@ -34,7 +37,7 @@ void* smoker_2(void* arg)
 {
 	printf("Smoker two waiting to smoke (has tabaco)\n");
 
-
+	return NULL;
 }
 
 /**
