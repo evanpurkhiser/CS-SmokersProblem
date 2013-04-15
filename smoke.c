@@ -94,25 +94,18 @@ void* pusher(void* arg)
  */
 void* agent(void* arg)
 {
-	for (int i = 0; i < 3; ++i)
+	int agent_id = *(int*) arg;
+
+	for (int i = 0; i < 6; ++i)
 	{
 		nanosleep((struct timespec[]){{0, rand() % 200000000}}, NULL);
 
 		// Wait for a lock on the agent
 		sem_wait(&agent_ready);
 
-		int item_1 = rand() % 3;
-		int item_2;
-
-		do
-		{
-			item_2 = rand() % 3;
-		}
-		while (item_1 == item_2);
-
-		sem_post(&pusher_semaphores[item_1]);
-		sem_post(&pusher_semaphores[item_2]);
-
+		// Release the items this agent gives out
+		sem_post(&pusher_semaphores[agent_id]);
+		sem_post(&pusher_semaphores[(agent_id + 1) % 3]);
 	}
 
 	return NULL;
@@ -172,12 +165,16 @@ int main(int argc, char* arvg[])
 		}
 	}
 
-	// Start up the agents
+	// Agent ID's will be passed to the threads. Allocate the ID's on the stack
+	int agent_ids[6];
+
 	pthread_t agent_threads[6];
 
 	for (int i = 0; i < 3; ++i)
 	{
-		if (pthread_create(&agent_threads[i], NULL, agent, NULL) == EAGAIN)
+		agent_ids[i] =i;
+
+		if (pthread_create(&agent_threads[i], NULL, agent, &agent_ids[i]) == EAGAIN)
 		{
 			perror("Insufficient resources to create thread");
 			return 0;
