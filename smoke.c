@@ -16,8 +16,8 @@ sem_t smoker_semaphors[3];
 char* smoker_types[3] = { "matches & tobacco", "matches & paper", "tobacco & paper" };
 
 // This list represents item types that are on the table. This should corrispond
-// with the smoker_types, such that each item is the smoker has. So the first
-// item would be paper, then tobacco, then matches.
+// with the smoker_types, such that each item is the one the smoker has. So the
+// first item would be paper, then tobacco, then matches.
 bool items_on_table[3] = { false, false, false };
 
 // Each pusher pushes a certian type item, manage these with this semaphore
