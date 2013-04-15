@@ -42,10 +42,9 @@ void* smoker_1(void* arg)
 		printf("\033[0;34mSmoker one  \033[0;31m>>\033[0m Waiting to smoke (has matches)\n");
 
 		sem_wait(&smoker_waits[1]);
-		printf("\033[0;34mSmoker one  \033[0;32m<<\033[0m Received matches and tobacco. Now making cigarette.\n");
+		printf("\033[0;34mSmoker one  \033[0;32m<<\033[0m Received paper and tobacco. Now making cigarette.\n");
 		sem_post(&agent);
 		printf("\033[0;34mSmoker one  \033[0;37m--\033[0m Smoking cigarette.\n");
-
 	}
 
 	return NULL;
@@ -62,7 +61,7 @@ void* smoker_2(void* arg)
 		printf("\033[0;35mSmoker two  \033[0;31m>>\033[0m Waiting to smoke (has tobacco)\n");
 
 		sem_wait(&smoker_waits[2]);
-		printf("\033[0;35mSmoker two  \033[0;32m<<\033[0m Received matches and tobacco. Now making cigarette.\n");
+		printf("\033[0;35mSmoker two  \033[0;32m<<\033[0m Received matches and paper. Now making cigarette.\n");
 		sem_post(&agent);
 		printf("\033[0;35mSmoker two  \033[0;37m--\033[0m Smoking cigarette.\n");
 	}
