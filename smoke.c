@@ -106,6 +106,9 @@ void* agent(void* arg)
 		// Release the items this agent gives out
 		sem_post(&pusher_semaphores[agent_id]);
 		sem_post(&pusher_semaphores[(agent_id + 1) % 3]);
+
+		// Say what type of items we just put on the table
+		printf("\033[0;35mAgent giving out %s\033[0;0m\n", smoker_types[(agent_id + 2) % 3]);
 	}
 
 	return NULL;
