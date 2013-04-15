@@ -49,8 +49,8 @@ void* smoker(void* arg)
 	return NULL;
 }
 
-// The mutex protectes the pusher from losing
-sem_t mutex;
+// This semaphore gives the pusher exclusive access to the items on the table
+sem_t pusher_lock;
 
 /**
  * The pusher is responsible for releasing the proper smoker semaphore when the
@@ -64,7 +64,7 @@ void* pusher(void* arg)
 	{
 		// Wait for this pusher to be needed
 		sem_wait(&pusher_semaphores[pusher_id]);
-		sem_wait(&mutex);
+		sem_wait(&pusher_lock);
 
 		// Check if the other item we need is on the table
 		if (items_on_table[(pusher_id + 1) % 3])
@@ -83,7 +83,7 @@ void* pusher(void* arg)
 			items_on_table[pusher_id] = true;
 		}
 
-		sem_post(&mutex);
+		sem_post(&pusher_lock);
 	}
 
 	return NULL;
@@ -126,8 +126,8 @@ int main(int argc, char* arvg[])
 	// the table at any given time. A values of 1 = nothing on the table
 	sem_init(&agent_ready, 0, 1);
 
-	// Initalize te mutext semaphore
-	sem_init(&mutex, 0, 1);
+	// Initalize the pusher lock semaphore
+	sem_init(&pusher_lock, 0, 1);
 
 	// Initialize the semaphores for each of the 2 different types of smokers
 	for (int i = 0; i < 3; ++i)
