@@ -19,10 +19,13 @@ void* smoker_0(void* arg)
 	while (true)
 	{
 		nanosleep((struct timespec[]){{0, rand() % 200000000}}, NULL);
-		printf("Smoker zero waiting to smoke (has paper)\n");
+		printf("\033[0;33mSmoker zero \033[0;31m>>\033[0m Waiting to smoke (has paper)\n");
 
 		sem_wait(&smoker_waits[0]);
-		printf("Smoker zero recieved matchges and tabaco. Now smoking.\n");
+		printf("\033[0;33mSmoker zero \033[0;32m<<\033[0m Received matches and tobacco. Now making cigarette.\n");
+		sem_post(&agent);
+		printf("\033[0;33mSmoker zero \033[0;37m--\033[0m Smoking cigarette.\n");
+
 	}
 
 	return NULL;
@@ -36,34 +39,39 @@ void* smoker_1(void* arg)
 	while (true)
 	{
 		nanosleep((struct timespec[]){{0, rand() % 200000000}}, NULL);
-		printf("Smoker one waiting to smoke (has matches)\n");
+		printf("\033[0;34mSmoker one  \033[0;31m>>\033[0m Waiting to smoke (has matches)\n");
 
 		sem_wait(&smoker_waits[1]);
-		printf("Smoker zero recieved matchges and tabaco. Now smoking.\n");
+		printf("\033[0;34mSmoker one  \033[0;32m<<\033[0m Received matches and tobacco. Now making cigarette.\n");
+		sem_post(&agent);
+		printf("\033[0;34mSmoker one  \033[0;37m--\033[0m Smoking cigarette.\n");
+
 	}
 
 	return NULL;
 }
 
 /**
- * Smoker 2 has an infinite supply of tabaco
+ * Smoker 2 has an infinite supply of tobacco
  */
 void* smoker_2(void* arg)
 {
 	while (true)
 	{
 		nanosleep((struct timespec[]){{0, rand() % 200000000}}, NULL);
-		printf("Smoker two waiting to smoke (has tabaco)\n");
+		printf("\033[0;35mSmoker two  \033[0;31m>>\033[0m Waiting to smoke (has tobacco)\n");
 
 		sem_wait(&smoker_waits[2]);
-		printf("Smoker zero recieved matchges and tabaco. Now smoking.\n");
+		printf("\033[0;35mSmoker two  \033[0;32m<<\033[0m Received matches and tobacco. Now making cigarette.\n");
+		sem_post(&agent);
+		printf("\033[0;35mSmoker two  \033[0;37m--\033[0m Smoking cigarette.\n");
 	}
 
 	return NULL;
 }
 
 /**
- * The main thread handles the agent's abritatin of items.
+ * The main thread handles the agent's arbitration of items.
  */
 int main(int argc, char* arvg[])
 {
@@ -71,7 +79,7 @@ int main(int argc, char* arvg[])
 	srand(time(NULL));
 
 	// Initalize our agent semaphore
-	sem_init(&agent, 0, 0);
+	sem_init(&agent, 0, 1);
 
 	// Setup our smoker threads and function refs
 	pthread_t smoker_threads[3];
@@ -87,6 +95,16 @@ int main(int argc, char* arvg[])
 			perror("Insufficent resources to create thread\n");
 			return 0;
 		}
+	}
+
+	// Let the agent begin distributing his items
+	while (true)
+	{
+		// Lock the agent once he's
+		sem_wait(&agent);
+
+		// Distribute two items for one of the three the smokers
+		sem_post(&smoker_waits[rand() % 3]);
 	}
 
 	// Join all of the smoker threads on exit
