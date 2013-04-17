@@ -98,7 +98,7 @@ void* agent(void* arg)
 
 	for (int i = 0; i < 6; ++i)
 	{
-		nanosleep((struct timespec[]){{0, rand() % 200000000}}, NULL);
+		usleep(rand() % 200000);
 
 		// Wait for a lock on the agent
 		sem_wait(&agent_ready);
