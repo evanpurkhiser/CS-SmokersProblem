@@ -113,7 +113,8 @@ void* agent(void* arg)
 		sem_post(&pusher_semaphores[(agent_id + 1) % 3]);
 
 		// Say what type of items we just put on the table
-		printf("\033[0;35m==> \033[0;33mAgent giving out %s\033[0;0m\n", smoker_types[(agent_id + 2) % 3]);
+		printf("\033[0;35m==> \033[0;33mAgent %d giving out %s\033[0;0m\n",
+			agent_id, smoker_types[(agent_id + 2) % 3]);
 	}
 
 	return NULL;
