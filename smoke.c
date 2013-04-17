@@ -129,11 +129,14 @@ int main(int argc, char* arvg[])
 	// Initalize the pusher lock semaphore
 	sem_init(&pusher_lock, 0, 1);
 
-	// Initialize the semaphores for each of the 2 different types of smokers
+	// Initialize the semaphores for the smokers and pusher
 	for (int i = 0; i < 3; ++i)
 	{
 		sem_init(&smoker_semaphors[i], 0, 0);
+		sem_init(&pusher_semaphores[i], 0, 0);
 	}
+
+
 
 	// Smoker ID's will be passed to the threads. Allocate the ID's on the stack
 	int smoker_ids[6];
