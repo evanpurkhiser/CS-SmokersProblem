@@ -40,10 +40,15 @@ void* smoker(void* arg)
 
 		// Wait for the proper combination of items to be on the table
 		sem_wait(&smoker_semaphors[type_id]);
+
+		// Make the cigarette before releasing the agent
+		printf("\033[0;37mSmoker %d \033[0;32m<<\033[0m Now making the a cigarette\n", smoker_id);
+		usleep(rand() % 50000);
 		sem_post(&agent_ready);
 
 		// We're smoking now
-		printf("\033[0;37mSmoker %d \033[0;32m<<\033[0m Now smoking\n", smoker_id);
+		printf("\033[0;37mSmoker %d \033[0;37m--\033[0m Now smoking\n", smoker_id);
+		usleep(rand() % 50000);
 	}
 
 	return NULL;
